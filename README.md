@@ -28,8 +28,15 @@ Add solhint :- `yarn add solhint`
 
 # More on setup
 
-run `yarn add --dev @chainlink/contracts`
-this adds all the contracts chainlink has that we need to use for getting different price feeds
-run `yarn add --dev hardhat-deploy`
-this helps us maintain or deploy code as we wanna track our deplyments and want a better way to write test and deploy.js
-`yarn add --dev @nomiclabs/hardhat-ethers@npm:hardhat-deploy-ethers ethers`# hardhat-fund-me
+run `yarn add --dev @chainlink/contracts`<br>
+this adds all the contracts chainlink has that we need to use for getting different price feeds<br>
+run `yarn add --dev hardhat-deploy`<br>
+this helps us maintain or deploy code as we wanna track our deplyments and want a better way to write test and deploy.js<br>
+`yarn add --dev @nomiclabs/hardhat-ethers@npm:hardhat-deploy-ethers ethers`# hardhat-fund-me<br>
+
+when we use deploy function from terminal we need to make a deploy folder that 
+deploys different solidity files and we make diffent files in that folder and number them in order we wanna deploy them.
+
+We do not use a main function and call that but we make an another function of our choice and call that
+
+## Mocking 
