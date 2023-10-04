@@ -34,9 +34,15 @@ run `yarn add --dev hardhat-deploy`<br>
 this helps us maintain or deploy code as we wanna track our deplyments and want a better way to write test and deploy.js<br>
 `yarn add --dev @nomiclabs/hardhat-ethers@npm:hardhat-deploy-ethers ethers`# hardhat-fund-me<br>
 
-when we use deploy function from terminal we need to make a deploy folder that 
+when we use deploy function from terminal we need to make a deploy folder that
 deploys different solidity files and we make diffent files in that folder and number them in order we wanna deploy them.
 
 We do not use a main function and call that but we make an another function of our choice and call that
 
-## Mocking 
+## Mocking
+
+Mocking is a method to test our project by unit testing and create mocks for the part of code we cannot get output for without ruuning them like making a request to the server (200,403,500 output codes) creating mocks are essential because we dont always want to deploy our contract and wait for the responce..
+
+also in this project we have a <i>priceconverter.sol</i> file which relies on a pre existing smart contract <i>AggregatorV3Interface.sol</i> and it contain differnet blocks which contain value of differene different currencies and have multiple tyle of crypto and contain huge data so we need to craete a mock in order to make use of different blocks it contains as per our reqirements and not change our code everytime we want to get another currency value!
+
+Problem occures when we want to use diffrent chains then we cannot hardcode our block number then we need to have the block numbe rfor that perticular chain..so we create mocks

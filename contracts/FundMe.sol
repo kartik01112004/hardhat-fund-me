@@ -20,9 +20,11 @@ contract FundMe {
     uint256 public constant MINIMUM_USD = 50 * 1e18;
 
     address public immutable i_owner;
+    AggregatorV3Interface public priceFeed;
 
-    constructor() {
+    constructor(address priceFeedAddress) {
         i_owner = msg.sender;
+        priceFeed = AggregatorV3Interface(priceFeedAddress);
     }
 
     function fund() public payable {
@@ -30,7 +32,7 @@ contract FundMe {
         //after this lesson try to make in rupees
         //1. how do we send ETH to this contract?
         require(
-            msg.value.getConversionRate() >= MINIMUM_USD,
+            msg.value.getConversionRate(priceFeed) >= MINIMUM_USD,
             "didnt send enough"
         ); // 1e18 == 1* 10**18 wei or 1 ETH
         //18 decimals
