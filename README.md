@@ -50,3 +50,25 @@ Problem occures when we want to use diffrent chains then we cannot hardcode our 
 ## aave
 
 ## helper-hardhat-config
+
+## Creating mocks
+
+We import mocks from chainlink directly insted of copying them individualy
+
+here by `import "@chainlink/contracts/src/v0.6/tests/MockV3Aggregator.sol";`
+
+keep in mind taht you use the same solidity version for the new mock cotract as of in the chainlink mocks on github
+
+## Using different solidity versions
+
+````solidity: {
+        compilers: [
+            {
+                version: "0.8.7",
+            },
+            {
+                version: "0.6.6",
+            },
+        ],
+    },```
+````
