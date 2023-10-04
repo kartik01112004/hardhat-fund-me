@@ -46,3 +46,7 @@ Mocking is a method to test our project by unit testing and create mocks for the
 also in this project we have a <i>priceconverter.sol</i> file which relies on a pre existing smart contract <i>AggregatorV3Interface.sol</i> and it contain differnet blocks which contain value of differene different currencies and have multiple tyle of crypto and contain huge data so we need to craete a mock in order to make use of different blocks it contains as per our reqirements and not change our code everytime we want to get another currency value!
 
 Problem occures when we want to use diffrent chains then we cannot hardcode our block number then we need to have the block numbe rfor that perticular chain..so we create mocks
+
+## aave
+
+## helper-hardhat-config
