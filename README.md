@@ -72,3 +72,7 @@ keep in mind taht you use the same solidity version for the new mock cotract as 
         ],
     },```
 ````
+
+## Solidity style guide
+
+it is always good to use style guide as it makes our code easier to read it helps us keep variable names etc.....

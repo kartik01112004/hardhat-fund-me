@@ -1,18 +1,28 @@
-//we wanna widhraw funds
-//we wanna get funds
-//say a minimun funding value in USD
-
 // SPDX-License-Identifier: MIT
+//pragma
 pragma solidity ^0.8.7;
 
 import "./PriceConverter.sol";
 
+//we wanna widhraw funds
+//we wanna get funds
+//say a minimun funding value in USD
+
 // constant, immutable === using them saves gas
 //after using constant 944,608 gas, before using constant 966,825 gas
 
-error NotOwner();
+//error codes
+error FundMe__NotOwner();
 
+// interfaces, libraries, contracts
+
+/** @title A contract for crowd funding
+ * @author Kartik Goel
+ * @notice it is to demo a sample funding contract
+ * @dev implimets pricefeeds as our library
+ */
 contract FundMe {
+    //type declarations
     using PriceConverter for uint256;
 
     address[] public funders;
@@ -22,11 +32,28 @@ contract FundMe {
     address public immutable i_owner;
     AggregatorV3Interface public priceFeed;
 
+    modifier onlyOwner() {
+        //require(msg.sender==i_owner,"sender is not owner");
+        if (msg.sender != i_owner) {
+            revert FundMe__NotOwner();
+        }
+        _; //do rest of the code present in the function that uses it
+    }
+
     constructor(address priceFeedAddress) {
         i_owner = msg.sender;
         priceFeed = AggregatorV3Interface(priceFeedAddress);
     }
 
+    receive() external payable {
+        fund();
+    }
+
+    fallback() external payable {
+        fund();
+    }
+
+    /// @notice Funds our contract based on the ETH/USD price
     function fund() public payable {
         //we wanna be able to set a minimum fund amount in USD
         //after this lesson try to make in rupees
@@ -70,21 +97,5 @@ contract FundMe {
             value: address(this).balance
         }("");
         require(callSuccess, "call failed");
-    }
-
-    modifier onlyOwner() {
-        //require(msg.sender==i_owner,"sender is not owner");
-        if (msg.sender != i_owner) {
-            revert NotOwner();
-        }
-        _; //do rest of the code present in the function that uses it
-    }
-
-    receive() external payable {
-        fund();
-    }
-
-    fallback() external payable {
-        fund();
     }
 }

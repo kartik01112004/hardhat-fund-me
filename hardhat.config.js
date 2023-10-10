@@ -25,7 +25,7 @@ module.exports = {
             url: SEPOLIA_RPC_URL,
             accounts: [PRIVATE_KEY],
             chainId: 11155111,
-            blockConfirmations: 6,
+            blockConfirmations: 6, // teling how many block we wanna wait
         },
     },
     solidity: {
