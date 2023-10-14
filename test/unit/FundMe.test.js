@@ -7,20 +7,19 @@ describe("FundMe", async function () {
     let mockV3Aggregator
     beforeEach(async function () {
         //depoying all contracts using fixture
-        //const accounts = await ethers.getSigners() //gets us all the accounts
-        //const accountZero = account[0]
-        deployer = await getNamedAccounts() //
+
+        deployer = (await getNamedAccounts()).deployer
         await deployments.fixture(["all"])
-        fundme = await ethers.getContractAt("FundMe", deployer)
+        fundMe = await ethers.getContractAt("FundMe", deployer)
         mockV3Aggregator = await ethers.getContractAt(
             "MockV3Aggregator",
             deployer,
         )
     })
-    describe("constructor", async function () {
-        it("sets the aggregator addresses correctly", async function () {
-            const response = await fundMe.priceFeed()
-            assert.equal(response, mockV3Aggregator.address)
+    describe("constructor", function () {
+        it("sets the aggregator addresses correctly", async () => {
+            const response = await fundMe.getPriceFeed()
+            assert.equal(response, mockV3Aggregator.target)
         })
     })
 })
