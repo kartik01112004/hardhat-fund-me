@@ -11,8 +11,8 @@ describe("FundMe", async function () {
         //const accountZero = account[0]
         deployer = await getNamedAccounts() //
         await deployments.fixture(["all"])
-        fundme = await ethers.getContract("FundMe", deployer)
-        mockV3Aggregator = await ethers.getContract(
+        fundme = await ethers.getContractAt("FundMe", deployer)
+        mockV3Aggregator = await ethers.getContractAt(
             "MockV3Aggregator",
             deployer,
         )
