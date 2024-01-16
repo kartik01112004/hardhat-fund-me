@@ -1,101 +1,120 @@
 // SPDX-License-Identifier: MIT
-//pragma
+// 1. Pragma
 pragma solidity ^0.8.7;
-
+// 2. Imports
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "./PriceConverter.sol";
 
-//we wanna widhraw funds
-//we wanna get funds
-//say a minimun funding value in USD
-
-// constant, immutable === using them saves gas
-//after using constant 944,608 gas, before using constant 966,825 gas
-
-//error codes
+// 3. Interfaces, Libraries, Contracts
 error FundMe__NotOwner();
 
-// interfaces, libraries, contracts
-
-/** @title A contract for crowd funding
- * @author Kartik Goel
- * @notice it is to demo a sample funding contract
- * @dev implimets pricefeeds as our library
+/**@title A sample Funding Contract
+ * @author Patrick Collins
+ * @notice This contract is for creating a sample funding contract
+ * @dev This implements price feeds as our library
  */
 contract FundMe {
-    //type declarations
+    // Type Declarations
     using PriceConverter for uint256;
 
-    address[] public funders;
-    mapping(address => uint256) public addressToAmountFunded;
+    // State variables
     uint256 public constant MINIMUM_USD = 50 * 10 ** 18;
+    address private immutable i_owner;
+    address[] private s_funders;
+    mapping(address => uint256) private s_addressToAmountFunded;
+    AggregatorV3Interface private s_priceFeed;
 
-    address public immutable i_owner;
-    AggregatorV3Interface public priceFeed;
+    // Events (we have none!)
 
+    // Modifiers
     modifier onlyOwner() {
-        //require(msg.sender==i_owner,"sender is not owner");
-        if (msg.sender != i_owner) {
-            revert FundMe__NotOwner();
-        }
-        _; //do rest of the code present in the function that uses it
+        // require(msg.sender == i_owner);
+        if (msg.sender != i_owner) revert FundMe__NotOwner();
+        _;
     }
 
-    constructor(address priceFeedAddress) {
+    // Functions Order:
+    //// constructor
+    //// receive
+    //// fallback
+    //// external
+    //// public
+    //// internal
+    //// private
+    //// view / pure
+
+    constructor(address priceFeed) {
+        s_priceFeed = AggregatorV3Interface(priceFeed);
         i_owner = msg.sender;
-        priceFeed = AggregatorV3Interface(priceFeedAddress);
-    }
-
-    receive() external payable {
-        fund();
-    }
-
-    fallback() external payable {
-        fund();
     }
 
     /// @notice Funds our contract based on the ETH/USD price
     function fund() public payable {
-        //we wanna be able to set a minimum fund amount in USD
-        //after this lesson try to make in rupees
-        //1. how do we send ETH to this contract?
         require(
-            msg.value.getConversionRate(priceFeed) >= MINIMUM_USD,
-            "didnt send enough"
-        ); // 1e18 == 1* 10**18 wei or 1 ETH
-        //18 decimals
-        funders.push(msg.sender);
-        addressToAmountFunded[msg.sender] += msg.value;
-        //what is reverting?
-        //Undo any action before,and send remaining gas back
+            msg.value.getConversionRate(s_priceFeed) >= MINIMUM_USD,
+            "You need to spend more ETH!"
+        );
+        // require(PriceConverter.getConversionRate(msg.value) >= MINIMUM_USD, "You need to spend more ETH!");
+        s_addressToAmountFunded[msg.sender] += msg.value;
+        s_funders.push(msg.sender);
     }
 
     function withdraw() public onlyOwner {
-        //require( msg.sender==owner,"sender is ot owner"); //this makes the withraw function only accessible to the owner but there is a better way
+        for (
+            uint256 funderIndex = 0;
+            funderIndex < s_funders.length;
+            funderIndex++
+        ) {
+            address funder = s_funders[funderIndex];
+            s_addressToAmountFunded[funder] = 0;
+        }
+        s_funders = new address[](0);
+        // Transfer vs call vs Send
+        // payable(msg.sender).transfer(address(this).balance);
+        (bool success, ) = i_owner.call{value: address(this).balance}("");
+        require(success);
+    }
+
+    function cheaperWithdraw() public onlyOwner {
+        address[] memory funders = s_funders;
+        // mappings can't be in memory, sorry!
         for (
             uint256 funderIndex = 0;
             funderIndex < funders.length;
-            funderIndex = funderIndex + 1
+            funderIndex++
         ) {
             address funder = funders[funderIndex];
-            addressToAmountFunded[funder] = 0;
+            s_addressToAmountFunded[funder] = 0;
         }
-        funders = new address[](0); //resets the array
+        s_funders = new address[](0);
+        // payable(msg.sender).transfer(address(this).balance);
+        (bool success, ) = i_owner.call{value: address(this).balance}("");
+        require(success);
+    }
 
-        // actually withraw the funds
+    /** @notice Gets the amount that an address has funded
+     *  @param fundingAddress the address of the funder
+     *  @return the amount funded
+     */
+    function getAddressToAmountFunded(
+        address fundingAddress
+    ) public view returns (uint256) {
+        return s_addressToAmountFunded[fundingAddress];
+    }
 
-        //transfer
-        //msg.sender= address type
-        //payable(msg.sender) = paybale address type. Transfer only works with payable address
-        //payable(msg.sender).transfer(address(this).balance);
+    function getVersion() public view returns (uint256) {
+        return s_priceFeed.version();
+    }
 
-        //send
-        //bool sendSuccess= payable (msg.sender).send(address(this).balance);
-        //require(sendSuccess, "send failed");
+    function getFunder(uint256 index) public view returns (address) {
+        return s_funders[index];
+    }
 
-        //call
-        (bool callSuccess, ) = payable(msg.sender).call{
-            value: address(this).balance
-        }("");
-        require(callSuccess, "call failed");
+    function getOwner() public view returns (address) {
+        return i_owner;
+    }
+
+    function getPriceFeed() public view returns (AggregatorV3Interface) {
+        return s_priceFeed;
     }
 }
