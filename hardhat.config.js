@@ -1,5 +1,6 @@
 require("@nomicfoundation/hardhat-toolbox")
 require("hardhat-deploy")
+require("@nomiclabs/hardhat-ethers")
 require("hardhat-gas-reporter")
 require("dotenv").config()
 require("solidity-coverage")

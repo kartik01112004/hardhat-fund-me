@@ -15,19 +15,19 @@ const { developmentChains } = require("../../helper-hardhat-config")
               // deployer = accounts[0]
               deployer = (await getNamedAccounts()).deployer
               await deployments.fixture(["all"])
-              fundMe = await ethers.getContractAt("FundMe", deployer)
-              mockV3Aggregator = await ethers.getContractAt(
+              fundMe = await ethers.getContract("FundMe", deployer)
+              mockV3Aggregator = await ethers.getContract(
                   "MockV3Aggregator",
                   deployer,
               )
           })
 
-          //   describe("constructor", function () {
-          //       it("sets the aggregator addresses correctly", async () => {
-          //           const response = await fundMe.getPriceFeed()
-          //           assert.equal(response, mockV3Aggregator.address)
-          //       })
-          //   })
+          describe("constructor", function () {
+              it("sets the aggregator addresses correctly", async () => {
+                  const response = await fundMe.getPriceFeed()
+                  assert.equal(response, mockV3Aggregator.address)
+              })
+          })
 
           //   describe("fund", function () {
           //       // https://ethereum-waffle.readthedocs.io/en/latest/matchers.html
