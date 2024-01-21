@@ -80,3 +80,20 @@ it is always good to use style guide as it makes our code easier to read it help
 ### Ethereum Stackexchange
 
 https://ethereum.stackexchange.com/questions/139409/hardhat-deploy-typeerror-ethers-getcontract-is-not-a-function
+
+## GREP
+
+allows us to run single single test
+`yarn hardhat test --grep "<whatever testcase we wanna run>"`
+
+## Debugging
+
+we can create breakpoints by clicking before the line numbr for a red dot then in debugging tab we can use javascriot debugger to debug the code by this we can see the variables and objects and there values it can help us understand what is going on..
+
+we can also add a hardhat plugin console.sol which lets us use console.log in solidity so when we run tests we get the consolesed out things for debugging
+
+## Gas 3
+
+when we use arithmatic operations on 2 big numbers we should use `.add()` `.mul()` etc for less erros as bignumbers are objects and dont get get added or devided
+
+when we test for eth in wallet or contract we should consider gas spent and add that in our checks
