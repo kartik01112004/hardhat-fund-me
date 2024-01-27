@@ -97,3 +97,7 @@ we can also add a hardhat plugin console.sol which lets us use console.log in so
 when we use arithmatic operations on 2 big numbers we should use `.add()` `.mul()` etc for less erros as bignumbers are objects and dont get get added or devided
 
 when we test for eth in wallet or contract we should consider gas spent and add that in our checks
+
+## console.log
+
+we can use this for debugging in solidity
