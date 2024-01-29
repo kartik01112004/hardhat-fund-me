@@ -86,7 +86,36 @@ const { developmentChains } = require("../../helper-hardhat-config")
                   //   startingFundMeBalance + startingDeployerBalance,
                   //   endingDeployerBalance
               })
+              it("cheeperwithdraw ETH from a single funder", async function () {
+                  // Arrange
+                  const startingFundMeBalance =
+                      await fundMe.provider.getBalance(fundMe.address)
+                  const startingDeployerBalance =
+                      await fundMe.provider.getBalance(deployer)
 
+                  //act
+                  const transactionResponce = await fundMe.cheaperWithdraw() // we spent gas here so we need to calculate that
+                  const transactionReceipt = await transactionResponce.wait(1)
+                  const { gasUsed, effectiveGasPrice } = transactionReceipt
+                  const gasCost = gasUsed.mul(effectiveGasPrice)
+                  const endingFundMeBalance = await fundMe.provider.getBalance(
+                      fundMe.address
+                  )
+                  const endingDeployerBalance =
+                      await fundMe.provider.getBalance(deployer)
+                  //assert
+                  assert.equal(endingFundMeBalance, 0)
+                  assert.equal(
+                      startingFundMeBalance
+                          .add(startingDeployerBalance)
+                          .toString(),
+                      endingDeployerBalance.add(gasCost).toString()
+                  )
+                  // use add() as big numbers dont just add up normaly and its hard to do this way
+                  // using .add() is much easier
+                  //   startingFundMeBalance + startingDeployerBalance,
+                  //   endingDeployerBalance
+              })
               it("allowes us to withdraw with multiple funders", async function () {
                   // arrange
                   const accounts = await ethers.getSigners()
