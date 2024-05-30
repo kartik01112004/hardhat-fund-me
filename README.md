@@ -1,5 +1,5 @@
-**([Click here to get frontend code:](https://github.com/kartik01112004/html-fund-me) )**
-
+**([Click here to get frontend code](https://github.com/kartik01112004/html-fund-me) )**
+just deploy this and add the abi and contract address to constants.js file 
 
 # Sample Hardhat Project
 
